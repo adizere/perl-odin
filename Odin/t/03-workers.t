@@ -22,5 +22,6 @@ foreach( qw( Odin::Worker::Parent Odin::Worker::Child ) ) {
     }
 }
 
+
 my $parent = Odin::Worker::Parent->new();
 can_ok( $parent, 'dispatch_new_child' );

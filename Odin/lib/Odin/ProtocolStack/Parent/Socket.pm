@@ -1,11 +1,11 @@
-package Odin::ProtocolStack::Parent::SocketProtocol;
+package Odin::ProtocolStack::Parent::Socket;
 
 use strict;
 use warnings;
 
 =head1 NAME
 
-Odin::ProtocolStack::Parent::SocketProtocol
+Odin::ProtocolStack::Parent::Socket
 
 =head1 DESCRIPTION
 
@@ -17,7 +17,9 @@ workers.
 use base qw( Odin::ProtocolStack::ParentProtocolLayer );
 
 use Odin::Conf qw( $conf );
+
 use IO::Socket::SSL;
+use Carp;
 
 __PACKAGE__->mk_group_accessors( simple => qw( socket ) );
 
@@ -41,13 +43,38 @@ sub _init {
     );
 
     unless( $self->socket() ) {
-        warn "Error creating socket.";
-        die IO::Socket::SSL::errstr;
+        warn "Error creating socket: " . $!;
+
+        if ( $!{EACCES} && $conf->{socket}->{port} eq '443' ) {
+            warn "Error: Listening on 443 needs root priviledges.\n";
+        }
+        croak IO::Socket::SSL::errstr;
     }
 }
 
+
 sub accept {
-    warn $conf;
+    my $self = shift();
+
+    my $client_socket;
+
+    while(1){
+        $client_socket = $self->socket()->accept();
+        last if $client_socket;
+        sleep( $conf->{server}->{accept_timeout} );
+    }
+
+    return {
+        socket => $client_socket,
+        ip => inet_ntoa( $client_socket->peeraddr() ),
+        port => $client_socket->peerport(),
+    };
+}
+
+sub shutdown {
+    my $self = shift();
+
+    $self->socket() && $self->socket()->close();
 }
 
 1;

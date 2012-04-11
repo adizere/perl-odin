@@ -9,12 +9,14 @@
     },
 
     "server": {
-        "pk_file": "server.key",
-        "cert_file": "server.crt"
+        "pk_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.key",
+        "cert_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.crt",
+
+        "accept_timeout": 1
     },
 
     "CA": {
-        "root_dir": "/mn/hgfs",
-        "cert_file": "certificate_authority.crt"
+        "root_dir": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/ca/",
+        "cert_file": "sample.crt"
     }
 }

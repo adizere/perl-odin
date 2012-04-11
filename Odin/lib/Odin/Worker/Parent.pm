@@ -6,14 +6,14 @@ use warnings;
 use base qw( Odin::Worker );
 
 use Odin::Worker::Child;
-use Odin::ProtocolStack::Parent::SocketProtocol;
+use Odin::ProtocolStack::Parent::Socket;
 
 
 sub _init {
     my $self = shift();
 
     $self->protocol_stack(
-        Odin::ProtocolStack::Parent::SocketProtocol->new()
+        Odin::ProtocolStack::Parent::Socket->new()
     );
 }
 
@@ -28,12 +28,17 @@ sub _run {
 
     while(1){
         warn "Entered Parent main loop.";
+
+        my $client = $self->protocol_stack()->accept();
+        warn "Got a connection from: " . $client->{ip} . ':' . $client->{port};
+
+        $self->dispatch_new_child( $client->{socket} );
     }
 }
 
 
 sub dispatch_new_child {
-    my $self = shift();
+    my ( $self, $socket ) = shift();
 
     my $child = Odin::Worker::Child->new( { socket_protocol => $self->protocol_stack() } );
 }
