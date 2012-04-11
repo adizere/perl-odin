@@ -1,4 +1,4 @@
-use Test::More tests => 10;
+use Test::More tests => 14;
 
 BEGIN {
     # all classes loaded ok
@@ -12,7 +12,13 @@ BEGIN {
         Odin::ProtocolStack::ProtocolLayer
         Odin::ProtocolStack::ParentProtocolLayer
         Odin::ProtocolStack::ChildProtocolLayer
-        Odin::ProtocolStack::Parent::SocketProtocol
+
+        Odin::ProtocolStack::Parent::Socket
+
+        Odin::ProtocolStack::Child::Socket
+        Odin::ProtocolStack::Child::Messaging
+        Odin::ProtocolStack::Child::Authentication
+        Odin::ProtocolStack::Child::ChildLogic
 
         Odin::Conf
 
