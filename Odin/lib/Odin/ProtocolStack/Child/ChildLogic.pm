@@ -17,14 +17,6 @@ authenticated client are satisfied.
 use base qw( Odin::ProtocolStack::ChildProtocolLayer );
 
 
-sub _init {
-    my ( $self, $args ) = @_;
-
-    $self->instantiante_stack() if ( $args->{complete_stack} );
-
-    return $self;
-}
-
 
 sub run {
 

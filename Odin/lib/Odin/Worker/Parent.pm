@@ -40,7 +40,9 @@ sub _run {
 sub dispatch_new_child {
     my ( $self, $socket ) = shift();
 
-    my $child = Odin::Worker::Child->new( { socket_protocol => $self->protocol_stack() } );
+    my $child = Odin::Worker::Child->new( {
+        client_socket => $self->protocol_stack(),
+    } );
 }
 
 1;

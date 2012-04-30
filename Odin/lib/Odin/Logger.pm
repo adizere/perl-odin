@@ -13,7 +13,5 @@ Interface to be used for logging through an external module.
 
 =cut
 
-use Sys::Syslog;
-
 
 1;
