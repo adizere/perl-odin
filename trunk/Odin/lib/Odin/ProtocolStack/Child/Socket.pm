@@ -21,6 +21,8 @@ follow the Base class specification, and therefore are named:
 
 use base qw( Odin::ProtocolStack::ChildProtocolLayer );
 
+use Carp;
+
 __PACKAGE__->mk_group_accessors( simple => qw( _socket ) );
 
 
@@ -28,7 +30,7 @@ sub _init {
     my $self = shift();
     my $client_socket = shift();
     unless( $client_socket ){
-        die "Need the socket on which the communication is made!";
+        croak "Need the socket on which the communication is made!";
     }
 
     $self->_socket( $client_socket );

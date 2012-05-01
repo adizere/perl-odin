@@ -17,11 +17,15 @@ workers.
 use base qw( Odin::ProtocolStack::ParentProtocolLayer );
 
 use Odin::Conf qw( $conf );
+use Odin::Logger qw( log CRIT );
 
 use IO::Socket::SSL;
 use Carp;
+use Socket;
+
 
 __PACKAGE__->mk_group_accessors( simple => qw( socket ) );
+
 
 sub _init {
     my $self = shift();
@@ -43,10 +47,10 @@ sub _init {
     );
 
     unless( $self->socket() ) {
-        warn "Error creating socket: " . $!;
+        log( CRIT, "Error creating socket: " . $! );
 
         if ( $!{EACCES} && $conf->{socket}->{port} eq '443' ) {
-            warn "Error: Listening on 443 needs root priviledges.\n";
+            log( CRIT, "Error: Listening on 443 needs root priviledges." );
         }
         croak IO::Socket::SSL::errstr;
     }
@@ -58,7 +62,7 @@ sub accept {
 
     my $client_socket;
 
-    while(1){
+    while( 1 ){
         $client_socket = $self->socket()->accept();
         last if $client_socket;
         sleep( $conf->{server}->{accept_timeout} );
@@ -70,6 +74,7 @@ sub accept {
         port => $client_socket->peerport(),
     };
 }
+
 
 sub shutdown {
     my $self = shift();
