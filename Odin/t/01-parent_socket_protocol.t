@@ -19,6 +19,16 @@ can_ok( $socket_proto, 'accept' );
 if ( my $pid = fork() ) {
     # parent
 
+    use Odin::Conf qw( $conf );
+
+    # fire up a Client to connect..
+    my $sock = IO::Socket::SSL->new(
+        PeerAddr => 'localhost',
+        PeerPort => $conf->{socket}->{port},
+        Proto    => 'tcp',
+    );
+    ok( defined $sock, 'Client connection through localhost.' );
+
     sleep( 1 );
     kill INT => $pid;
 

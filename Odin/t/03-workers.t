@@ -11,17 +11,20 @@ can_ok( $base_class_name, 'new' );
 can_ok( $base_class_name, 'start' );
 
 # testing the parent
-foreach( qw( Odin::Worker::Parent Odin::Worker::Child ) ) {
-    use_ok( $_ );
-    isa_ok( $_, $base_class_name );
+use_ok( 'Odin::Worker::Parent' );
+isa_ok( 'Odin::Worker::Parent', $base_class_name );
 
-    my $instance = $_->new();
-    isa_ok( $instance, $_ );
-    foreach my $method ( qw( start protocol_stack ) ) {
-        can_ok( $instance, $method );
-    }
+my $instance = Odin::Worker::Parent->new();
+isa_ok( $instance, 'Odin::Worker::Parent' );
+foreach my $method ( qw( start protocol_stack ) ) {
+    can_ok( $instance, $method );
 }
 
+# now test the child..
+use_ok( 'Odin::Worker::Child' );
+isa_ok( 'Odin::Worker::Child', $base_class_name );
 
-my $parent = Odin::Worker::Parent->new();
-can_ok( $parent, 'dispatch_new_child' );
+my $child_instance = Odin::Worker::Child->new( {
+    client_socket => 'socket simple mock',
+} );
+

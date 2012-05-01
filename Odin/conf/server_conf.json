@@ -12,7 +12,11 @@
         "pk_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.key",
         "cert_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.crt",
 
-        "accept_timeout": 1
+        "accept_timeout": 1,
+
+        "child_wait_timeout": 1,
+
+        "fork_fail_timeout": 1
     },
 
     "CA": {

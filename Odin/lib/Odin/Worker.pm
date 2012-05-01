@@ -44,6 +44,12 @@ sub start {
 }
 
 
+sub update_process_name {
+    my $self = shift();
+
+    $0 = "perl [" . ref( $self ) . '] ' . ( shift() || '' );
+}
+
 =head1 STUB METHODS
 
 These should be overwritten in each subclasses, based on what behaviour is needed.

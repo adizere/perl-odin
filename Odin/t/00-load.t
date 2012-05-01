@@ -1,7 +1,12 @@
-use Test::More tests => 14;
+use Test::More tests => 15;
+
+use strict;
+use warnings;
+
 
 BEGIN {
     # all classes loaded ok
+
     foreach( qw(
         Odin
 
@@ -21,6 +26,7 @@ BEGIN {
         Odin::ProtocolStack::Child::ChildLogic
 
         Odin::Conf
+        Odin::Constants
 
         Odin::Logger
     )){

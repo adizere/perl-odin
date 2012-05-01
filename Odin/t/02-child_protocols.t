@@ -29,7 +29,7 @@ foreach my $layer ( qw(
     can_ok( $layer, '_init' );
     can_ok( $layer, 'shutdown' );
 
-    my $socket_proto = $layer->new();
+    my $socket_proto = $layer->new( "initialized mock" );
     isa_ok( $socket_proto, $layer );
 }
 
