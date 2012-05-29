@@ -9,12 +9,12 @@ my $builder = Module::Build->new(
     dist_version_from   => 'lib/Odin.pm',
     build_requires => {
         'Test::More' => '0.9',
+        'Test::Deep' => '0.1',
+        'Test::Exception' => '0.3',
         'Class::Accessor::Grouped' => '0.1',
         'Exporter' => '5.65',
-        'Config::JSON' => '1.5',
-        'Cwd' => '3',
-        'IO::Socket::SSL' => '1.50',
-        'Sys::Syslog' => '0.27'
+        'JSON' => '2.53',
+        'Internals' => '1.1',
     },
     add_to_cleanup      => [ 'Odin-*' ],
 );

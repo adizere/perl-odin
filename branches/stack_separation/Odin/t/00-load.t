@@ -1,34 +1,34 @@
-use Test::More tests => 15;
+use Test::More tests => 14;
 
 use strict;
 use warnings;
 
 
 BEGIN {
-    # all classes loaded ok
+    # all classes load ok
 
     foreach( qw(
         Odin
+        Odin::ProtocolStack
 
-        Odin::Worker
-        Odin::Worker::Parent
-        Odin::Worker::Child
+        Odin::ProtocolStack::ProtocolClass
+        Odin::ProtocolStack::Layer
+        Odin::ProtocolStack::Resource
+        Odin::ProtocolStack::Message
 
-        Odin::ProtocolStack::ProtocolLayer
-        Odin::ProtocolStack::ParentProtocolLayer
-        Odin::ProtocolStack::ChildProtocolLayer
+        Odin::ProtocolStack::Layer::Socket
 
-        Odin::ProtocolStack::Parent::Socket
+        Odin::ProtocolStack::Layer::Messaging
 
-        Odin::ProtocolStack::Child::Socket
-        Odin::ProtocolStack::Child::Messaging
-        Odin::ProtocolStack::Child::Authentication
-        Odin::ProtocolStack::Child::ChildLogic
+        Odin::ProtocolStack::Layer::Authentication
+        Odin::ProtocolStack::Layer::Authentication::Authorization
+        Odin::ProtocolStack::Layer::Authentication::Registration
 
-        Odin::Conf
-        Odin::Constants
+        Odin::ProtocolStack::Layer::Dispatcher
 
-        Odin::Logger
+        Odin::ProtocolStack::Message::JSONEncoded;
+
+        Odin::Const
     )){
         use_ok( $_ ) || BAIL_OUT "Error loading $_!\n";
     }
