@@ -43,6 +43,7 @@ sub shutdown {
 
     $self->_shutdown();
 
+    # shutdown domino-effect from upper to lower classes
     $self->lower_layer() && $self->lower_layer()->shutdown();
 }
 

@@ -28,21 +28,16 @@ sub _init {
     $self->peer_ip( $args->{ip} );
     $self->peer_port( $args->{port} );
 
-    $self->instantiate_stack( $args->{client_socket} );
+    $self->_instantiate_stack( $args->{client_socket} );
 }
 
 
 sub _run {
     my $self = shift();
 
-    $self->update_process_name( 'Serving client' );
+    $self->update_process_name( 'Serving client [' . $self->peer_ip() . ":" . $self->peer_port() . "]" );
 
-    log( TRACE, "Child should block here" );
-
-    my $cnt = 0;
-    while( $cnt++ < 10 ){
-        sleep(1);
-    }
+    $self->_handle_client();
 
     exit(0);
 }
@@ -93,7 +88,7 @@ The socket returned by an accept() call, resulting in a new peer connected to
 our server.
 
 =cut
-sub instantiate_stack {
+sub _instantiate_stack {
     my $self = shift();
     my $client_socket = shift();
 
@@ -116,5 +111,27 @@ sub instantiate_stack {
 
     __PACKAGE__->protocol_stack( $self->protocol_stack() );
 }
+
+
+=head2 handle_client
+
+    $child->handle_client();
+
+B<Description:>
+
+Method for starting up the actual client-server communication.
+No logic is kept here.
+
+All the logic is pertained inside the ProtocolStack* classes, accessed through
+our $self->protocol_stack() object.
+
+
+=cut
+sub _handle_client {
+    my $self = shift();
+
+    $self->protocol_stack->start();
+}
+
 
 1;

@@ -13,7 +13,7 @@ Messaging-level protocol for interaction between a client and the Child
 workers.
 
 At the messaging level, specific encoding and serializing is performed,
-messages need to algo go through a basic validation process.
+messages need to go go through a basic validation process.
 
 =cut
 
