@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 37;
 use Test::Deep;
 use Test::Exception;
 
@@ -108,3 +108,15 @@ dies_ok{
 } 'Deserialization without initial serialized object.';
 
 
+# Start all over, this time deserialize what whe previously obtained
+$obj = $subclass_name->new(
+    {
+        serialized_message => $serialized_res,
+    }
+);
+
+$obj->deserialize();
+is( $obj->resource(), 'resource x', 'Resource after deserialization' );
+is( $obj->operation(), 'operation y', 'Operation after deserialization' );
+is( $obj->metadata(), 'medata m', 'Metadata after deserialization' );
+cmp_deeply( $data_t, $obj->data(), 'Data after deserialization ok' );

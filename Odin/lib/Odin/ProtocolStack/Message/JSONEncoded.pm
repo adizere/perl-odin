@@ -22,6 +22,42 @@ other properties are set. This means that a message is characterized by 4 attrib
 These attributes can be whatever type of data that supported by JSON Encoding:
 strings, hashref, arrayref - basically, any primitive perl data type.
 
+=head1 SYNOPSIS
+
+Suppose we need to send a message through our protocol..
+
+    use Odin::ProtocolStack::Message::JSONEncoded;
+
+    my $msg = Odin::ProtocolStack::Message::JSONEncoded->new();
+    $msg->resource( 'r' );
+    $msg->operation( 'a'  );
+    $msg->metadata( 'register' );
+    $msg->data(
+        {
+            user => 'U',
+            pass => 'P',
+            org => 'Foo',
+        }
+    );
+
+    print $msg->serialize(); # outputs I<{"resource":"r","operation":"a","metadata":"register","data":{ "user": "U", "pass":"P", "org": "Foo"}}>
+
+Now suppose we just received something from the socket..
+
+    use Odin::ProtocolStack::Message::JSONEncoded;
+
+    my $msg = Odin::ProtocolStack::Message::JSONEncoded->new(
+        {
+            serialized_data => '{"resource":"account","operation":"add","metadata":"ACK","data":"Account Foo created."}'
+        }
+    );
+    $msg->deserialize();
+    print $msg->resource(); # outputs I<account>
+    print $msg->operation(); # outputs I<add>
+    print $msg->metadata(); # outputs I<ACK>
+    print $msg->data(); # outputs I<Account Foo created.>
+
+
 =cut
 
 use base qw( Odin::ProtocolStack::Message );
@@ -50,14 +86,14 @@ __PACKAGE__->message_separator( '\n' ); # newline is escaped by JSON encoding, s
 This members define the content of the message.
 Initially empty.
 
-=head1 Inherited implemented methods
+=head1 Inherited methods
 
-=head2 init
+=head2 on_init
 
 Called from super class, new() method.
 
 =cut
-sub init {
+sub on_init {
     my $self = shift();
 
     $encoder = JSON->new->allow_nonref;
@@ -95,10 +131,11 @@ Sets the corresponding properties as they were encoded inside serialized_message
 sub deserialize {
     my $self = shift();
 
-    $self->serialized_message() || croak "serialized_message is not set for this object. Cannot deserialize an empty message.";
+    $self->serialized_message()
+        || croak "serialized_message is not set for this object. Cannot deserialize an empty message.";
 
     my $res = $encoder->decode( $self->serialized_message() );
-        foreach my $attribute ( qw( resource operation metadata data ) ){
+    foreach my $attribute ( qw( resource operation metadata data ) ){
         $self->$attribute( $res->{$attribute} );
     }
 }

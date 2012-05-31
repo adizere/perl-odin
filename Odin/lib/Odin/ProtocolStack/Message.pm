@@ -139,13 +139,13 @@ sub new {
         }
     }
 
-    $self->init( $args );
+    $self->on_init( $args );
 
     return $self;
 }
 
 
-=head2 init
+=head2 on_init
 
 Abstract method - for specific object initialization.
 
@@ -156,7 +156,7 @@ It is I<mandatory> that this method is implemented in all subclases, otherwise
 object construction fails.
 
 =cut
-sub init: Abstract;
+sub on_init: Abstract;
 
 
 =head2 serialize
