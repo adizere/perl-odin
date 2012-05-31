@@ -16,7 +16,13 @@ this framework.
 
 use base qw( Odin::ProtocolStack::ProtocolClass );
 
+
+use Carp;
 use Attribute::Abstract;
+
+
+__PACKAGE__->mk_group_accessors( simple => qw( upper_layer lower_layer protocol_stack ) );
+
 
 
 sub new {
@@ -25,22 +31,56 @@ sub new {
     my $self = {};
     bless $self, $class;
 
-    warn "Package: " . __PACKAGE__;
-
-    $self->_init( @_ );
-
-
+    $self->on_init( @_ );
 
     return $self;
 }
 
 
-sub _init : Abstract;
+sub retrieve {
+    my $self = shift();
 
-sub shutdown : Abstract;
+    if ( $self->lower_layer() ) {
+        return $self->on_retrieve( $self->lower_layer()->retrieve() );
+    } else {
+        return $self->on_retrieve();
+    }
+}
 
-sub retrieve : Abstract;
 
-sub sent : Abstract;
+sub send {
+    my $self = shift();
+    my $data = shift();
+
+    unless( $data ) {
+        croak "No data was passed to " . __PACKAGE__ . "->send().";
+    }
+
+    if ( $self->lower_layer() ) {
+        return $self->lower_layer()->send( $self->on_send( $data ) );
+    } else {
+        return $self->on_send( $data );
+    }
+}
+
+
+sub shutdown {
+    my $self = shift();
+
+    # shutdown - domino-effect from lower to upper classes
+    $self->lower_layer() && $self->lower_layer()->shutdown();
+
+    $self->on_shutdown();
+}
+
+
+sub on_init : Abstract;
+
+sub on_shutdown : Abstract;
+
+sub on_retrieve : Abstract;
+
+sub on_send : Abstract;
+
 
 1;

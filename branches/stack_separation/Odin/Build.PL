@@ -15,6 +15,9 @@ my $builder = Module::Build->new(
         'Exporter' => '5.65',
         'JSON' => '2.53',
         'Internals' => '1.1',
+        'Attribute::Abstract' => '1.0',
+        'IO::Socket::SSL' => '1.7',
+        'JSON' => '2.53',
     },
     add_to_cleanup      => [ 'Odin-*' ],
 );
