@@ -73,18 +73,10 @@ my $encoder = undef;
 
 =head1 Inherited class members
 
-=head2 message_separator
-
-The messages_separator is defined as the character '\n'.
-
-=cut
-__PACKAGE__->message_separator( '\n' ); # newline is escaped by JSON encoding, so it's safe to use
-
-
 =head2 resource, operation, metadata, data
 
 This members define the content of the message.
-Initially empty.
+Initially they are all empty.
 
 =head1 Inherited methods
 
@@ -138,6 +130,8 @@ sub deserialize {
     foreach my $attribute ( qw( resource operation metadata data ) ){
         $self->$attribute( $res->{$attribute} );
     }
+
+    return $self;
 }
 
 1;
