@@ -1,4 +1,4 @@
-use Test::More tests => 14;
+use Test::More tests => 11;
 
 use strict;
 use warnings;
@@ -16,9 +16,6 @@ BEGIN {
         Odin::ProtocolStack::Message
         Odin::ProtocolStack::Layer::Socket
         Odin::ProtocolStack::Layer::Messaging
-        Odin::ProtocolStack::Layer::Authentication
-        Odin::ProtocolStack::Layer::Authentication::Authorization
-        Odin::ProtocolStack::Layer::Authentication::Registration
         Odin::ProtocolStack::Layer::Dispatcher
         Odin::ProtocolStack::Message::JSONEncoded;
         Odin::Const
