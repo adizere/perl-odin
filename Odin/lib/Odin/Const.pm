@@ -20,6 +20,8 @@ our $const = {
     socket_retrieve_poll_timer => 30,       # how many seconds we poll for content
 
     message_header_separator => "\n",       # the newline char - separates messages headers from actual messages
+
+    message_superclass => 'Odin::ProtocolStack::Message',
 };
 
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 37;
+use Test::More tests => 34;
 use Test::Deep;
 use Test::Exception;
 
@@ -13,7 +13,6 @@ my $class_name = 'Odin::ProtocolStack::Message';
 use_ok( $class_name );
 
 can_ok( $class_name, 'new' );
-can_ok( $class_name, 'message_separator' );
 
 ###
 # Subclass of specific type
@@ -22,10 +21,7 @@ my $subclass_name = 'Odin::ProtocolStack::Message::JSONEncoded';
 use_ok( $subclass_name );
 
 can_ok( $subclass_name, 'new' );
-can_ok( $subclass_name, 'message_separator' );
 
-my $separator = $subclass_name->message_separator();
-ok ( defined $separator && length $separator > 0, 'Message separator specified in subclass.' );
 
 my $obj = $subclass_name->new();
 isa_ok( $obj, $subclass_name );

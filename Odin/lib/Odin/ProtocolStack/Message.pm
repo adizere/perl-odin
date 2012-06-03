@@ -55,23 +55,6 @@ Messages can be instantiated in multiple ways:
 
 =head1 Inheritable class members
 
-=head2 message_separator
-
-Separator character that is sent on the socket between consecutive messages.
-
-Set/Get at the class level:
-
-    # New package that defines a Message, inherits from Odin::ProtocolStack::Message
-    package XMLSerializedExample;
-
-    use base 'Odin::ProtocolStack::Message';
-
-    __PACKAGE__->message_separator( '%' ); # XML reserved character, will never be part of a message
-
-=cut
-__PACKAGE__->mk_group_accessors( inherited => 'message_separator' );
-
-
 =head2 resource, operation, metadata, data
 
 This members define the content of the message.
