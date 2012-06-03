@@ -52,7 +52,7 @@ Odin::ProtocolStack::Layer
 
 =item C<upper_layer>
 
-The Layer that sits on top of Messaging is the B<Authentication>.
+By default the Layer that sits on top of Messaging is the B<Dispatcher>.
 
 =item C<lower_layer>
 

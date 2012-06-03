@@ -17,5 +17,22 @@ the request from the peer.
 
 =cut
 
+use base qw( Odin::ProtocolStack::Layer );
+
+
+sub on_init {
+    my $self = shift();
+
+    return $self;
+}
+
+
+sub on_retrieve {
+    my $self = shift();
+    my $msg = shift();
+
+
+    
+}
 
 1;

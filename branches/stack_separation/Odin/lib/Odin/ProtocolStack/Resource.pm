@@ -15,4 +15,6 @@ client-server exchanged messages.
 =cut
 
 
+use base qw( Odin::ProtocolStack::Layer );
+
 1;
