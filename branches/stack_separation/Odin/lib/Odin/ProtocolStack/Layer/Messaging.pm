@@ -34,7 +34,6 @@ use Odin::Const qw( $const );
 
 use Carp;
 
-
 =head1 DESCRIPTION
 
 The Messaging layer assures the validity of messages sent between peers.
@@ -105,7 +104,7 @@ sub on_init {
     }
 
     my $superclass = $const->{message_superclass};
-    unless ( $message_class->isa( $superclass ) ) {
+    unless ( $message_class->isa( $superclass ) && $message_class ne $superclass ) {
         croak "Messaging layer initialization failed; invalid class for messages [$message_class] - should be a subclass of $superclass.";
     }
 
