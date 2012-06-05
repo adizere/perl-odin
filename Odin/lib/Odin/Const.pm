@@ -22,6 +22,7 @@ our $const = {
     message_header_separator => "\n",       # the newline char - separates messages headers from actual messages
 
     message_superclass => 'Odin::ProtocolStack::Message',
+    resource_superclass => 'Odin::ProtocolStack::Resource',
 };
 
 

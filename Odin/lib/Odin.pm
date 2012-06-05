@@ -35,6 +35,7 @@ sub _get_conf_path {
     my $this_name = __PACKAGE__;
 
     # from Odin to Odin.pm
+    # WARNING: If it were Module::Odin, then transform to Module/Odin.pm
     $this_name .= '.pm';
 
     my $this_path = $INC{$this_name};

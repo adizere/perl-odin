@@ -67,10 +67,10 @@ sub send {
 sub shutdown {
     my $self = shift();
 
+    $self->on_shutdown();
+
     # shutdown - domino-effect from lower to upper classes
     $self->lower_layer() && $self->lower_layer()->shutdown();
-
-    $self->on_shutdown();
 }
 
 
