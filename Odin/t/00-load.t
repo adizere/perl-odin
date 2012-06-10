@@ -1,7 +1,7 @@
-use Test::More tests => 11;
-
 use strict;
 use warnings;
+
+use Test::More tests => 11;
 
 
 BEGIN {
@@ -18,7 +18,7 @@ BEGIN {
         Odin::ProtocolStack::Layer::Messaging
         Odin::ProtocolStack::Layer::Dispatcher
         Odin::ProtocolStack::Message::JSONEncoded;
-        Odin::Const
+        Odin::ProtocolStack::Configuration
     )){
         use_ok( $_ ) || BAIL_OUT "Error loading $_!\n";
     }

@@ -123,7 +123,7 @@ Sets the corresponding properties as they were encoded inside serialized_message
 sub deserialize {
     my $self = shift();
 
-    $self->serialized_message()
+    ( defined $self->serialized_message() && length $self->serialized_message() > 0 )
         || croak "serialized_message is not set for this object. Cannot deserialize an empty message.";
 
     my $res = $encoder->decode( $self->serialized_message() );

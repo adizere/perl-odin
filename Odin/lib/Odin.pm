@@ -31,6 +31,7 @@ for locating files relative to our project working directory.
 # Automagically set the ODIN_HOME directory
 $ENV{ODIN_HOME} = _get_conf_path();
 
+
 sub _get_conf_path {
     my $this_name = __PACKAGE__;
 

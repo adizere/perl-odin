@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 33;
 use Test::Exception;
 use Test::MockModule;
 
@@ -38,28 +38,39 @@ can_ok( $class_name, 'message_class' );
 
 # Object construction - no message class
 my $msg_layer;
-throws_ok {
+dies_ok {
     $msg_layer = $class_name->new();
-} qr/type of messages/, 'Messaging layer init. without the class of the messages.';
+} 'Messaging layer init. without the class of the messages.';
 
 # bogus nonexisting message class
-throws_ok {
+dies_ok {
     $msg_layer = $class_name->new(
         'Odin::ProtocolStack::Message::BogusFooClass',
     );
-} qr/could not find the class/, 'Messaging layer init. with a bogus message class name.';
+} 'Messaging layer init. with a bogus message class name.';
 
 # existing but invalid message class
-throws_ok {
+dies_ok {
     $msg_layer = $class_name->new(
         'Odin::ProtocolStack::Resource',
     );
-} qr/should be a subclass/, 'Messaging layer init. with an invalid message class name.';
+} 'Messaging layer init. with an invalid message class name.';
+
+# now in hashref form.. same invalid class
+dies_ok {
+    $msg_layer = $class_name->new(
+        {
+            message_class => 'Odin::ProtocolStack::Resource',
+        }
+    );
+} 'Messaging layer init. with an invalid message class name.';
 
 # valid message class & proper initialization
 my $message_class = 'Odin::ProtocolStack::Message::JSONEncoded';
 $msg_layer = $class_name->new(
-    $message_class
+    {
+        message_class => $message_class,
+    },
 );
 isa_ok( $msg_layer, $class_name );
 

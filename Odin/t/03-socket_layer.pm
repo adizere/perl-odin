@@ -48,17 +48,19 @@ is( $socket_layer, undef, 'Layer not initialized unless socket is passed to the 
     my $test_message = 'Foo Bar Ceausescu.'x10000;
     my $fname = File::Temp::tempnam( "/tmp/", "odin-socket-test-" . $$ );
 
-    # Redirect STDOUT to the new temporary file
+    # Direct our handler to the new temporary file
     open FH, '>', $fname or die "Can't open temporary file $fname: $!";
 
-    # Create a mock of the socket that will be passed, writint unto STDOUT
+    # Create a mock of the socket that will be passed, writint unto the handler (effectively: in the file)
     my $module = new Test::MockModule( 'IO::Socket::SSL' );
     $module->mock( 'new', sub { return bless \*FH, 'IO::Socket::SSL' } );
 
     my $ssl_mocked = IO::Socket::SSL->new();
 
     $socket_layer = $class_name->new(
-        $ssl_mocked,
+        {
+            peer_socket => $ssl_mocked,
+        },
     );
     isa_ok( $socket_layer, $class_name );
 
@@ -81,5 +83,5 @@ is( $socket_layer, undef, 'Layer not initialized unless socket is passed to the 
 
     # tidy
     $socket_layer->shutdown(); # closes the FH
-    unlink $test_message;
+    unlink $fname;
 }

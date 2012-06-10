@@ -95,7 +95,7 @@ to I<serialize()> will return the value manually set by you.
 __PACKAGE__->mk_group_accessors( simple => 'serialized_message' );
 
 
-=head1 Inheritable methods
+=head1 INHERITABLE METHODS
 
 =head2 new
 
@@ -166,7 +166,8 @@ B<Parameters:>
 None.
 
 B<Returns:>
-The serialized data.
+The object on which this method was called (having it's content updated from the
+deserialization process).
 
 =cut
 sub deserialize: Abstract;
@@ -181,6 +182,20 @@ will not return what you think it does.
 
 # TODO
 This is also a TODO.
+
+=head1 AUTHOR
+
+Adi Seredinschi, C<< <adizere at cpan.org> >>
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2012 Adi Seredinschi.
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
