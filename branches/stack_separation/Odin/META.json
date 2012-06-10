@@ -1,0 +1,51 @@
+{
+   "abstract" : "Distributed socket server framework",
+   "author" : [
+      "Adi Seredinschi <adizere@cpan.org>"
+   ],
+   "dynamic_config" : 1,
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.112150",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Odin",
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Attribute::Abstract" : "1.0",
+            "Class::Accessor::Grouped" : "0.1",
+            "Exporter" : "5.6",
+            "File::Temp" : "0.2",
+            "IO::Socket::SSL" : "1.6",
+            "JSON" : "2.53",
+            "Test::Deep" : "0.1",
+            "Test::Exception" : "0.3",
+            "Test::File" : "1.3",
+            "Test::MockModule" : "0.05",
+            "Test::More" : "0.9"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.38"
+         }
+      }
+   },
+   "provides" : {
+      "Odin" : {
+         "file" : "lib/Odin.pm",
+         "version" : "0.001"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "license" : [
+         "http://dev.perl.org/licenses/"
+      ]
+   },
+   "version" : "0.001"
+}
