@@ -146,7 +146,7 @@ sub new {
 
     my $message = $layer->retrieve();
 
-Calls in a cascading manner C<on_retrieve()) on subsequently upper layers, starting
+Calls in a cascading manner C<on_retrieve()> on subsequently upper layers, starting
 with the lowest and ending with the current one.
 
 Given a stack of 4 layers: A the highest, D the lowest layer:
