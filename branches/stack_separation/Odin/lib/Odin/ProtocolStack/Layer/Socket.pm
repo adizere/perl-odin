@@ -18,10 +18,18 @@ creation time.
 use base qw( Odin::ProtocolStack::Layer );
 
 
-use Odin::Const qw( $const );
-
 use Carp;
 use Time::HiRes; # for sleep in floating seconds
+
+# some package constants ..
+use constant {
+
+    SOCKET_SEND_TIMEOUT => 1.0,         # floating value, waiting time (when the out buffer is full) between syswrites
+    SOCKET_RETRIEVE_TIMEOUT => 0.01,    # floating value, waiting time between sysreads
+    SOCKET_RETRIEVE_POLL_TIMER => 2,   # how many seconds we poll for content
+
+    MESSAGE_HEADER_SEPARATOR => "\n",   # the newline char - separates messages headers from actual messages
+};
 
 
 =head2 isa
@@ -78,7 +86,13 @@ Sets the socket.
 =cut
 sub on_init {
     my $self = shift();
-    my $_socket = shift();
+    my $args = shift();
+
+    unless( ref $args eq 'HASH' ) {
+        croak "Socket layer initialization needs the parameters in a HASHREF form.";
+    }
+
+    my $_socket = $args->{peer_socket} || undef;
 
     # The actual socket that sits behind this layer
     unless( $_socket ){
@@ -108,7 +122,7 @@ sub on_send {
     return 0 unless ( $msg && $message_actual_len > 0 );
 
     # preparing the message: prepend the length and separation character
-    substr( $msg, 0, 0, sprintf( '%d%s', $message_actual_len, $const->{message_header_separator} ) );
+    substr( $msg, 0, 0, sprintf( '%d%s', $message_actual_len, MESSAGE_HEADER_SEPARATOR ) );
 
     my $socket = $self->_socket();
 
@@ -125,7 +139,7 @@ sub on_send {
         # continue sending
         while( $sent < $to_send ) {
             # let it breathe for a sec.
-            sleep( $const->{socket_send_timeout} );
+            sleep( SOCKET_SEND_TIMEOUT );
 
             # chop the part which was sent
             $msg = unpack( "x$last_sent a$to_send", $msg );
@@ -150,20 +164,22 @@ sub on_send {
 =item C<on_retrieve>
 
 Called from retrieve(), reading from the socket is done here, in a non-blocking
-manner. Maximum time that it polls for data is specified in Odin::Const: C<socket_retrieve_poll_timer>.
+manner. Maximum time that it polls for data is specified as a package level constant: SOCKET_RETRIEVE_POLL_TIMER.
 Two possible return values:
 
 * An empty string - the polling time was reached without any complete message arriving.
 * The serialized messaged sent from the peer.
+
+TODO: Make the maximum polling time dynamically adjustable.
 
 =cut
 sub on_retrieve {
     my $self = shift();
 
     my $socket = $self->_socket();
-    my $separator = $const->{message_header_separator};
+    my $separator = MESSAGE_HEADER_SEPARATOR;
 
-    my $max_time = time() + $const->{socket_retrieve_poll_timer};
+    my $max_time = time() + SOCKET_RETRIEVE_POLL_TIMER;
     my $now;
 
     # geting the length ..
@@ -188,7 +204,7 @@ sub on_retrieve {
             return '';
         }
 
-        sleep( $const->{socket_retrieve_timeout} );
+        sleep( SOCKET_RETRIEVE_TIMEOUT );
     }
 
     unless( $total_length =~ /^\d+$/ && $total_length > 0 ) {
@@ -217,7 +233,7 @@ sub on_retrieve {
             return '';
         }
 
-        sleep( $const->{socket_retrieve_timeout} );
+        sleep( SOCKET_RETRIEVE_TIMEOUT );
     }
 
     return $got;

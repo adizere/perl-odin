@@ -30,7 +30,7 @@ created and maintained inside B<ProtocolStack>).
 use base qw( Odin::ProtocolStack::Layer );
 
 
-use Odin::Const qw( $const );
+use Odin::ProtocolStack::Configuration qw( $conf );
 
 use Carp;
 
@@ -92,10 +92,16 @@ Expects the type of messages: a string holding the name of a subclass of 'Odin::
 =cut
 sub on_init {
     my $self = shift();
-    my $message_class = shift();
+    my $args = shift();
+
+    unless( ref $args eq 'HASH' ) {
+        croak "Messaging layer initialization needs the parameters in a HASHREF form.";
+    }
+
+    my $message_class = $args->{message_class} || undef;
 
     unless( $message_class ) {
-        croak "Messaging layer initialization needs to know what type of messages are passed around.";
+        croak "Messaging layer initialization needs to know what type of messages are passed around: 'message_class' parameter";
     }
 
     eval "require $message_class";
@@ -103,7 +109,7 @@ sub on_init {
         croak "Messaging layer initialization failed; could not find the class of the messages [$message_class]: " . $@;
     }
 
-    my $superclass = $const->{message_superclass};
+    my $superclass = $conf->{message_superclass};
     unless ( $message_class->isa( $superclass ) && $message_class ne $superclass ) {
         croak "Messaging layer initialization failed; invalid class for messages [$message_class] - should be a subclass of $superclass.";
     }
@@ -156,6 +162,10 @@ Returns an instance of C<message_class>.
 sub on_retrieve {
     my $self = shift();
     my $serialized_data = shift();
+
+    if ( ! $serialized_data || ( $serialized_data &&  length $serialized_data == 0 ) ) {
+        return $self->message_class()->new();
+    }
 
     my $msg = $self->message_class()->new(
         {

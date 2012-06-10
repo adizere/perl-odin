@@ -1,0 +1,31 @@
+{
+    # Layer that we will use, from lowest to highest
+    "layers": {
+        "0": {
+            "class": "Odin::ProtocolStack::Layer::Socket",
+            "parameters": {
+                # Empty parameter means it has to be provided at initialization
+                "peer_socket": ""
+            }
+        },
+        "1": {
+            "class": "Odin::ProtocolStack::Layer::Messaging",
+            "parameters": {
+                # Parameter is predefined;
+                # Note: A subclass of message_superclass (defined below)
+                "message_class": "Odin::ProtocolStack::Message::JSONEncoded"
+            }
+        },
+        "2": {
+            "class": "Odin::ProtocolStack::Layer::Dispatcher",
+            "parameters": {
+                "resources": [
+                    # Here go the class names of the resources that will be registered
+                ]
+            }
+        }
+    },
+
+    "message_superclass": "Odin::ProtocolStack::Message",
+    "resource_superclass": "Odin::ProtocolStack::Resource"
+}

@@ -6,12 +6,13 @@ use Test::Exception;
 use Test::MockModule;
 use Test::Deep;
 
-use Odin::Const qw( $const );
+use Odin::ProtocolStack::Configuration qw( $conf );
 
 
 my $class_name = 'Odin::ProtocolStack::Layer::Dispatcher';
 
 use_ok( $class_name );
+
 
 # inheritance
 isa_ok( $class_name, 'Odin::ProtocolStack::Layer' );
@@ -49,7 +50,7 @@ dies_ok {
 } 'Invalid registration of a non-existent class';
 
 dies_ok {
-    $dispatcher_layer->register_resource( 'Odin::Const' );
+    $dispatcher_layer->register_resource( 'Odin::ProtocolStack::Configuration' );
 } 'Invalid registration of a class that does not inherit from the proper superclass';
 
 {
@@ -68,12 +69,13 @@ dies_ok {
     $module->mock( 'test_operation', sub { return $_[1]; } );
 
     # make sure the ->isa() verification goes through.. version 1
-    #$module->mock( 'isa', sub { if ( $_[1] eq $const->{resource_superclass} ) { return 1; } return 0; } );
+    #$module->mock( 'isa', sub { if ( $_[1] eq $conf->{resource_superclass} ) { return 1; } return 0; } );
 
     # make sure the ->isa() verification goes through.. version 2
     # make it inherit from the default resources superclass
     no strict 'refs';
-    push @{"$resource_class_name\::ISA"}, $const->{resource_superclass};
+
+    push @{"$resource_class_name\::ISA"}, $conf->{resource_superclass};
 
     $dispatcher_layer->register_resource( $resource_class_name );
 

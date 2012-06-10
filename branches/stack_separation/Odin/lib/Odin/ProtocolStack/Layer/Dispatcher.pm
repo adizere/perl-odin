@@ -28,10 +28,10 @@ Odin::ProtocolStack::Layer::Dispatcher
 
 =cut
 
-use base qw( Odin::ProtocolStack::Layer );
+use base qw( Odin::ProtocolStack::Layer Exporter );
 
 
-use Odin::Const qw( $const );
+use Odin::ProtocolStack::Configuration qw( $conf );
 
 use Carp;
 
@@ -112,6 +112,13 @@ Initializes the index of registered resources to an empty hashref.
 =cut
 sub on_init {
     my $self = shift();
+    my $args = shift();
+
+    if ( $args && exists $args->{resources} ) {
+        foreach( @{$args->{resources}} ) {
+            $self->register_resource( $_ );
+        }
+    }
 
     $self->resources_index( {} );
 
@@ -250,7 +257,7 @@ sub register_resource {
         croak "Resource registration failed; could not find the class of the resource [$resource_class]: " . $@;
     }
 
-    my $superclass = $const->{resource_superclass};
+    my $superclass = $conf->{resource_superclass};
     unless ( $resource_class->isa( $superclass ) && $resource_class ne $superclass ) {
         croak "Resource registration failed; invalid class for resource [$resource_class] - should be a subclass of $superclass.";
     }
