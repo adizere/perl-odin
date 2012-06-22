@@ -30,8 +30,6 @@ created and maintained inside B<ProtocolStack>).
 use base qw( Odin::ProtocolStack::Layer );
 
 
-use Odin::ProtocolStack::Configuration qw( $conf );
-
 use Carp;
 
 =head1 DESCRIPTION
@@ -107,11 +105,6 @@ sub on_init {
     eval "require $message_class";
     if ( $@ ) {
         croak "Messaging layer initialization failed; could not find the class of the messages [$message_class]: " . $@;
-    }
-
-    my $superclass = $conf->{message_superclass};
-    unless ( $message_class->isa( $superclass ) && $message_class ne $superclass ) {
-        croak "Messaging layer initialization failed; invalid class for messages [$message_class] - should be a subclass of $superclass.";
     }
 
     $self->message_class( $message_class );

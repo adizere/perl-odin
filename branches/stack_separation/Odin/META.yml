@@ -27,6 +27,36 @@ provides:
   Odin:
     file: lib/Odin.pm
     version: 0.001
+  Odin::ProtocolStack:
+    file: lib/Odin/ProtocolStack.pm
+    version: 0
+  Odin::ProtocolStack::Configuration:
+    file: lib/Odin/ProtocolStack/Configuration.pm
+    version: 0
+  Odin::ProtocolStack::Layer:
+    file: lib/Odin/ProtocolStack/Layer.pm
+    version: 0
+  Odin::ProtocolStack::Layer::Dispatcher:
+    file: lib/Odin/ProtocolStack/Layer/Dispatcher.pm
+    version: 0
+  Odin::ProtocolStack::Layer::Messaging:
+    file: lib/Odin/ProtocolStack/Layer/Messaging.pm
+    version: 0
+  Odin::ProtocolStack::Layer::Socket:
+    file: lib/Odin/ProtocolStack/Layer/Socket.pm
+    version: 0
+  Odin::ProtocolStack::Message:
+    file: lib/Odin/ProtocolStack/Message.pm
+    version: 0
+  Odin::ProtocolStack::Message::JSONEncoded:
+    file: lib/Odin/ProtocolStack/Message/JSONEncoded.pm
+    version: 0
+  Odin::ProtocolStack::ProtocolClass:
+    file: lib/Odin/ProtocolStack/ProtocolClass.pm
+    version: 0
+  Odin::ProtocolStack::Resource:
+    file: lib/Odin/ProtocolStack/Resource.pm
+    version: 0
 resources:
   license: http://dev.perl.org/licenses/
 version: 0.001

@@ -1,11 +1,17 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 use Test::MockModule;
 use Test::Exception;
 
-use Odin::ProtocolStack::Configuration qw( $conf );
+use Odin::ProtocolStack::Configuration;
+
+# load the configuration first
+my $proper_conf_file = $ENV{ODIN_HOME} . "conf/protocol_conf.json";
+my $conf_obj = Odin::ProtocolStack::Configuration->new();
+my $conf = $conf_obj->conf( $proper_conf_file );
+is ( ref $conf, 'HASH', "Successfully retrieved the configuration from the file." );
 
 
 my $class_name = 'Odin::ProtocolStack::Resource';

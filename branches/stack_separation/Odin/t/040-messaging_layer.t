@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More tests => 31;
 use Test::Exception;
 use Test::MockModule;
 
@@ -49,21 +49,6 @@ dies_ok {
     );
 } 'Messaging layer init. with a bogus message class name.';
 
-# existing but invalid message class
-dies_ok {
-    $msg_layer = $class_name->new(
-        'Odin::ProtocolStack::Resource',
-    );
-} 'Messaging layer init. with an invalid message class name.';
-
-# now in hashref form.. same invalid class
-dies_ok {
-    $msg_layer = $class_name->new(
-        {
-            message_class => 'Odin::ProtocolStack::Resource',
-        }
-    );
-} 'Messaging layer init. with an invalid message class name.';
 
 # valid message class & proper initialization
 my $message_class = 'Odin::ProtocolStack::Message::JSONEncoded';

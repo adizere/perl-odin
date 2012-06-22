@@ -21,6 +21,9 @@ my $builder = Module::Build->new(
         'JSON' => '2.53',
         'File::Temp' => '0.2',
     },
+    configure_requires => {
+        'Module::Build' => 0.38
+    },
     add_to_cleanup      => [ 'Odin-*' ],
 );
 

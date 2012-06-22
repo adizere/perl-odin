@@ -20,7 +20,10 @@ MANIFEST
 META.json
 META.yml
 README
-t/00-load.t
+t/00-1-load.t
+t/00-2-manifest.t
+t/00-3-pod.t
+t/00-4-pod-coverage.t
 t/01-messages.t
 t/02-layer.pm
 t/03-socket_layer.pm
