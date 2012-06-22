@@ -31,8 +31,6 @@ Odin::ProtocolStack::Layer::Dispatcher
 use base qw( Odin::ProtocolStack::Layer Exporter );
 
 
-use Odin::ProtocolStack::Configuration qw( $conf );
-
 use Carp;
 
 =head1 DESCRIPTION
@@ -213,7 +211,7 @@ sub on_shutdown { return; }
 
 =over 4
 
-=item register_resource
+=item C<register_resource>
 
     # assuming that the class Odin::ProtocolStack::Resource::SampleResource exists
     $dispatcher_layer->register_resource( 'Odin::ProtocolStack::Resource::SampleResource' );
@@ -255,11 +253,6 @@ sub register_resource {
     eval "require $resource_class";
     if ( $@ ) {
         croak "Resource registration failed; could not find the class of the resource [$resource_class]: " . $@;
-    }
-
-    my $superclass = $conf->{resource_superclass};
-    unless ( $resource_class->isa( $superclass ) && $resource_class ne $superclass ) {
-        croak "Resource registration failed; invalid class for resource [$resource_class] - should be a subclass of $superclass.";
     }
 
     unless( ( defined $resource_class->resource_name() ) && ( length $resource_class->resource_name() > 0 ) ) {

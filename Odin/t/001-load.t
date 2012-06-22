@@ -13,11 +13,11 @@ BEGIN {
         Odin::ProtocolStack::Layer
         Odin::ProtocolStack::Resource
         Odin::ProtocolStack::Message
+        Odin::ProtocolStack::Configuration
         Odin::ProtocolStack::Layer::Socket
         Odin::ProtocolStack::Layer::Messaging
         Odin::ProtocolStack::Layer::Dispatcher
         Odin::ProtocolStack::Message::JSONEncoded
-        Odin::ProtocolStack::Configuration
     )){
         use_ok( $_ ) || BAIL_OUT "Error loading $_!\n";
     }

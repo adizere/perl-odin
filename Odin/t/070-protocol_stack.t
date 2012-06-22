@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More tests => 18;
 use Test::Exception;
 use Test::MockModule;
 use File::Temp ();
@@ -20,6 +20,7 @@ isa_ok( $class_name, 'Odin::ProtocolStack::ProtocolClass' );
 # class / object methods
 can_ok( $class_name, 'new' );
 can_ok( $class_name, '_layers' );
+can_ok( $class_name, 'register_resource' );
 
 
 my $stack;
@@ -30,9 +31,20 @@ dies_ok {
 is( $stack, undef, 'Improper object creation' );
 
 
+my $conf_file = $ENV{ODIN_HOME} . "conf/protocol_conf.json";
+
+dies_ok {
+    $stack = $class_name->new(
+        {
+            conf_path => $conf_file,
+        }
+    );
+} 'Improper initialization, without the parameters specified in the configuration file.';
+
 $stack = $class_name->new(
     {
         peer_socket => 'not a socket, but should work anyhow',
+        conf_path => $conf_file,
     },
 );
 isa_ok( $stack, $class_name );
@@ -57,6 +69,7 @@ my $ssl_mocked = IO::Socket::SSL->new();
 $stack = $class_name->new(
     {
         peer_socket => $ssl_mocked,
+        conf_path => $conf_file,
     },
 );
 isa_ok( $stack, $class_name );
