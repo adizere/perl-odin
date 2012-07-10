@@ -25,6 +25,10 @@ my $builder = Module::Build->new(
         'Module::Build' => 0.38
     },
     add_to_cleanup      => [ 'Odin-*' ],
+    json_files => {
+        'conf/protocol_conf.json' => 'conf/protocol_conf.json'
+    },
 );
 
+$builder->add_build_element( 'json' );
 $builder->create_build_script();
