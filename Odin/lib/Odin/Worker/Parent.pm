@@ -5,20 +5,27 @@ use warnings;
 
 use base qw( Odin::Worker );
 
-use Odin::Conf qw( $conf );
+
 use Odin::Worker::Child;
-use Odin::ProtocolStack::Parent::Socket;
-use Odin::Logger qw( log TRACE INFO CRIT ERROR WARN );
 
 use POSIX ":sys_wait_h";
+use Socket;
 
+
+use constant {
+    FORK_FAIL_TIMEOUT => 1,
+    CHILD_WAIT_TIMEOUT => 1,
+};
 
 sub _init {
-    my $self = shift();
+    my ( $self, $socket ) = @_;
 
-    $self->protocol_stack(
-        Odin::ProtocolStack::Parent::Socket->new()
-    );
+    unless( $socket ) {
+        warn "Now socket provided for Parent.\n";
+        exit;
+    }
+
+    $self->protocol_stack( $socket );
 
     # package level shortcut to the stack
     __PACKAGE__->protocol_stack( $self->protocol_stack() );
@@ -31,12 +38,14 @@ sub _run {
     $self->update_process_name( 'Accepting clients' );
 
     while( 1 ){
-        log( TRACE, "Entered Parent main loop.");
+        print( "Entered Parent main loop..\n");
 
-        my $client = $self->protocol_stack()->accept();
-        log( INFO, "Got a connection from: " . $client->{ip} . ':' . $client->{port} );
+        my $client = $self->_accept();
+        print( "Got a connection from: " . $client->{ip} . ':' . $client->{port} . "\n");
 
         $self->dispatch_new_child( $client );
+
+        $client->{socket}->close( SSL_no_shutdown => 1 ) if ( $client->{socket} );
     }
 }
 
@@ -50,11 +59,11 @@ sub dispatch_new_child {
         $pid = fork();
 
         if ( ! defined $pid ) {
-            log( ERROR, "fork() error: " . $! );
-            log( CRIT, "Fatal: Could not fork()! Retrying in " . $conf->{server}->{fork_fail_timeout} . "seconds." );
+            print( "fork() error: " . $! ."\n" );
+            print( "Fatal: Could not fork()! Retrying in " . FORK_FAIL_TIMEOUT . "seconds..\n" );
 
             # sleep, maybe some resources will become available and we can fork eventually
-            sleep( $conf->{server}->{fork_fail_timeout} );
+            sleep( FORK_FAIL_TIMEOUT );
 
             # give it another try, avoid deep recursion through goto
             next;
@@ -65,7 +74,7 @@ sub dispatch_new_child {
     }
     if ( $pid > 0 ) {
         # Parent
-        log( INFO, "New Child; PID: $pid." );
+        print( "New Child; PID: $pid..\n" );
         return;
     }
 
@@ -90,26 +99,26 @@ sub _exit_handler {
     # Basic safety measures
     $SIG{'INT'} = $SIG{'CHLD'} = $SIG{'HUP'} = 'IGNORE';
 
-    log( WARN, "[Odin::Parent] Entered the Exit Handler" );
+    print( "[Odin::Parent] Entered the Exit Handler.\n" );
 
-    __PACKAGE__->protocol_stack()->shutdown();
+    __PACKAGE__->protocol_stack()->shutdown( SSL_no_shutdown => 0, SSL_fast_shutdown => 0, SSL_ctx_free => 1 );
 
     my $count = kill HUP => -$$;
 
-    log( WARN, "Kill count: " . $count );
+    print( "Kill count: " . $count . "\n" );
 
-    sleep( $conf->{server}->{child_wait_timeout} );
+    sleep( CHILD_WAIT_TIMEOUT );
 
     my $finished;
     do {
         $finished = waitpid( -1, WNOHANG );
 
         # the OS might automatically reap childs if $finished < 0
-        log( INFO, "[parent] Child $finished finished with status: $?" )
+        print( "[parent] Child $finished finished with status: $?" )
             if ( $finished > 0 );
     } while ( $finished > 0 );
 
-    log( INFO, "[Odin::Parent] Exit.");
+    print( "[Odin::Parent] Exit..\n");
     exit(0);
 }
 
@@ -119,11 +128,39 @@ sub _sigchld_handler {
     local $!;
 
     while( (my $pid = waitpid(-1, WNOHANG)) > 0 && WIFEXITED( $? )) {
-        log( INFO, sprintf("[parent] Child %u finished with exit status: %u\n", $pid, $? ) );
+        print( sprintf("[parent] Child %u finished with exit status: %u\n", $pid, $? ) );
     }
 
     # re-set the handler
     $SIG{'CHLD'} = \&_sigchld_handler;
+}
+
+
+sub _accept {
+    my $self = shift();
+
+ACCEPT:
+    my $client_socket = $self->protocol_stack()->accept();
+
+    if ( ! $client_socket ) {
+
+        printf( "Accept returned with no socket: %s.\n", $! );
+
+        sleep( 1 );
+
+        goto ACCEPT;
+    }
+
+    my $ip = inet_ntoa( $client_socket->peeraddr() );
+    my $port = $client_socket->peerport();
+
+    printf( "Got a connection from: " . $ip . ":" . $port . "\n" );
+
+    return { 
+        socket => $client_socket,
+        ip => $ip, 
+        port => $port 
+    };
 }
 
 1;
