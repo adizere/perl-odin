@@ -26,7 +26,7 @@ use Attribute::Abstract;
 
 Messages can be instantiated in multiple ways:
 
-1. Using data that was received on the socked, which is serialized:
+1. Using data that was received on the socket, which is serialized:
 
     use Odin::ProtocolStack::Message::JSONEncoded;
 
@@ -76,7 +76,7 @@ subclasses of this class will also be sublasses of B<Class::Accessor::Grouped>,
 other members should be added through the mechanism provide by this package, e.g:
 
     # create accessors for various attributes of a subclass
-    __PACKAGE__->mk_group_accessors(simple => qw( username password ));
+    __PACKAGE__->mk_group_accessors( simple => qw( username password ) );
 
 =cut
 __PACKAGE__->mk_group_accessors( simple => qw( resource operation metadata data ) );

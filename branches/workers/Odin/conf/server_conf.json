@@ -1,0 +1,26 @@
+{
+    "socket": {
+        "listen_queue": 10,
+        "reuse_address": 1,
+        "port": 443,
+        "timeout": 300,
+        "blocking": 0,
+        "verify_mode": "0x01"
+    },
+
+    "server": {
+        "pk_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.key",
+        "cert_file": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/server/sample.crt",
+
+        "accept_timeout": 1,
+
+        "child_wait_timeout": 1,
+
+        "fork_fail_timeout": 1
+    },
+
+    "CA": {
+        "root_dir": "/mnt/hgfs/projects/perl-odin/trunk/Odin/private/ca/",
+        "cert_file": "sample.crt"
+    }
+}

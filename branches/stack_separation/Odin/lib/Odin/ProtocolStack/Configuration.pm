@@ -102,7 +102,7 @@ sub conf {
     }
 
     $self->_path() || croak "Need the path to the configuration file.";
-    -r $self->_path() || croak "The configuration file at " . $self->_path() . " is not readable.";
+    ( -r $self->_path() ) || croak "The configuration file at " . $self->_path() . " is not readable.";
 
     $self->_conf( Config::JSON->new( pathToFile => $self->_path() )->config() );
 
