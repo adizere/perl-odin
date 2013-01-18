@@ -42,7 +42,7 @@ sub _get_conf_path {
     my $this_path = $INC{$this_name};
 
     # remove the trailing lib/Odin.pm
-    $this_path =~ s/lib\/$this_name//g;
+    $this_path =~ s/lib\/+$this_name//g;
 
     # now we've got the full path to the directory holding the project
     return $this_path;

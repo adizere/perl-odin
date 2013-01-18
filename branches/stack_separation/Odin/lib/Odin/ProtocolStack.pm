@@ -123,7 +123,7 @@ sub _initialize {
 
     my $conf = $self->_conf();
 
-    foreach my $level ( sort keys $conf->{layers} ) {
+    foreach my $level ( sort keys %{$conf->{layers}} ) {
         eval "require $conf->{layers}->{$level}->{class};";
         if( $@) {
             croak "Could not find the layer defined by: " . $conf->{layers}->{$level}->{class};
@@ -133,7 +133,7 @@ sub _initialize {
 
         # Create the layer, with the required parameters
         if ( $conf->{layers}->{$level}->{parameters} ) {
-            foreach my $param_name ( keys $conf->{layers}->{$level}->{parameters} ) {
+            foreach my $param_name ( keys %{$conf->{layers}->{$level}->{parameters}} ) {
 
                 my $param_value =
                     $conf->{layers}->{$level}->{parameters}->{$param_name}
